@@ -1,0 +1,4 @@
+npx sequelize init
+npx sequelize-cli migration:generate --name add-fields
+npx sequelize-cli db:migrate
+npx sequelize-cli db:migrate:undo:all
