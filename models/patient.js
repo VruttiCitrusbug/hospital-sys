@@ -1,13 +1,9 @@
 
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize'); 
-const User = require('./User');
+const User = require('./user');
 
 const Patient = sequelize.define('Patient', {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   dateOfBirth: {
     type: DataTypes.DATEONLY,
     allowNull: false,
@@ -27,7 +23,9 @@ const Patient = sequelize.define('Patient', {
   token:{
     type: DataTypes.STRING,
     allowNull: true,
-  },
+  }
+},{
+  timestamps: false,
 });
 
 Patient.belongsTo(User);

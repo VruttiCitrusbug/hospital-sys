@@ -2,33 +2,66 @@ const express = require('express')
 const app = new express.Router()
 const auth = require('../middleware/auth')
 const User = require('../models/user')
+const Patient = require('../models/Patient')
 
 const sendwelcome = require('../emails/account')
 
 
-app.post('/users',async (req, res) => {
-    const user = new User(req.body)
-    console.log(user)
+app.post('/paitent',async (req, res) => {
+    console.log(req.body)
+    data = req.body
+    get_user_object = {
+        "email": data.email,
+        "username":data.username,
+        "password":data.password,
+        "firstName":data.firstName,
+        "lastName":data.lastName,
+    }
+    get_paitent_object = {
+        "dateOfBirth":data.dateOfBirth,
+        "gender":data.gender,
+        "contactNumber":data.contactNumber,
+        "address":data.address
+    }
+    const user = new User(get_user_object)
+    const patient = new Patient(get_user_object)
     try{
-        await user.save()
-        // sendwelcome(user.email)
-        res.status(201).send(user)
+        const user_obj = await user.save()
+        await patient.save()
+        res.status(201).send({success:"user created"})
 
     }catch(error){
         res.status(400).send({error:error})
     }
 })
 
-app.post('/user/login',async (req, res) => {
-    try{
-        const user = await User.findByCredentials(req.body.email,req.body.password)
-        const token = await user.generateAuthToken()
-        res.send({user:await user.getPublicProfile(),token})
+// app.post('/users',async (req, res) => {
+//     const user = new User(req.body)
+//     console.log(user)
+//     try{
+//         await user.save()
+//         // sendwelcome(user.email)
+//         res.status(201).send(user)
 
-    }catch(e){
-        res.status(403).send({error:"invalid data"})
-    }
-})
+//     }catch(error){
+//         res.status(400).send({error:error})
+//     }
+// })
+
+// app.post('/user/login',async (req, res) => {
+//     try{
+//         const user = await User.findByCredentials(req.body.email,req.body.password)
+//         const token = await user.generateAuthToken()
+//         res.send({user:await user.getPublicProfile(),token})
+
+//     }catch(e){
+//         res.status(403).send({error:"invalid data"})
+//     }
+// })
+
+
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // app.post('/users/logout',auth,async (req,res) => {
     

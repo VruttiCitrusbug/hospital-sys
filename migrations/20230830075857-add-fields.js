@@ -69,10 +69,6 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       dateOfBirth: {
         type: Sequelize.DATEONLY,
         allowNull: false,
@@ -110,10 +106,6 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       specialization: {
         type: Sequelize.STRING,
