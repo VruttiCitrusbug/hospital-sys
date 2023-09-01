@@ -7,20 +7,20 @@ const auth = async (req,res,next) => {
     try{
         const token = req.header('Authorization')
         const decoded = jwt.verify(token,process.env.JWT_TOKEN)
-        const user = await User.findOne({id:decoded.id,token:token})
+        const user = await User.findOne({ where: { id: decoded.id,token:token }});
         if(!user){
             throw new Error('err')
         }
         req.token = token
         req.user = user
-        const paitent = await Paitent.findOne({UserId:req.user.id})
+        const paitent = await Paitent.findOne({ where: {UserId:req.user.id}});
         if(!paitent){
             req.paitent = null
         }
         else{
             req.paitent = paitent
         }
-        const doctor = await Doctor.findOne({UserId:req.user.id})
+        const doctor = await Doctor.findOne({ where: {UserId:req.user.id}})
         if(!doctor){
             req.doctor = null
         }

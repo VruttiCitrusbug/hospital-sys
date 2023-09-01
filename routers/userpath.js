@@ -76,11 +76,13 @@ app.post('/doctor',async (req, res) => {
 //DONE
 app.post('/user/login',async (req, res) => {
     try{
-        const user = await User.findOne({ username: req.body.username });
+        // const user = await User.findOne({ username: req.body.username });
+        const user = await User.findOne({ where: { username: req.body.username }});
         if(!user){
             throw new Error('unable to log in')
         }
         const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+        console.log(user.username,"PPPPPPPPPPPPPPPPPPPPPPPPP")
         console.log(req.body.password,"PPPPPPPPPPPPPPPPPPPPPPPPP")
         console.log(user.password,"PPPPPPPPPPPPPPPPPPPPPPPPP")
         
@@ -128,24 +130,25 @@ app.get('/user/me',auth,async (req,res)=>{
         res.status(500).send(e)
     }
 })
-
+//DONE
 app.get('/user/paitent',auth,async (req,res)=>{
     try {
-        if(req.doctor!= null){
+        if(req.doctor != null){
             const paitent = await Patient.findAll({})
             res.send({
                 paitents:paitent
             })
         }
         else{
-            throw Error("please authenticate by doctor's token")
+            throw Error()
         }
     }
     catch(e){
-        res.status(500).send(e)
+        res.status(500).send({error:"please authenticate by doctor's token"})
     }
 })
 
+//DONE
 app.patch('/paitent/:id',auth,async (req,res)=>{
     const updates = Object.keys(req.body)
     const allowupdates_user = ['firstName','email','lastName']
@@ -158,42 +161,85 @@ app.patch('/paitent/:id',auth,async (req,res)=>{
         return res.status(400).send({"error":"invalid update"})
     }
     try {
-        
         if(!req.user){
             return res.status(400).send()
         }
-        const paitent = await Patient.findOne({id:req.params.id})
-        if(req.paitent.id == req.params.id || req.doctor != null){
-            const user = await Patient.findOne({id:paitent.User})
-            updates.forEach((update)=>{
-                if(allowupdates_user.includes(update)){
-                    user[update] = req.body[update]
-                }
-                if((allowupdates_paitent).includes(update)){
-                    paitent[update] = req.body[update]
-                }
-            })
-            await paitent.save()
-            await user.save()
-            res.send({
-                firstName:user.firstName,
-                lastName:user.lastName,
-                email:user.email,
-                dateOfBirth:paitent.dateOfBirth,
-                gender:paitent.gender,
-                contactNumber:paitent.contactNumber,
-                address:paitent.address
-            })
+        const paitent = await Patient.findOne({ where: { id: req.params.id }});
+        if(req.paitent != null ){
+            if(req.paitent.id != req.params.id){
+                return res.status(403).send({error:"unauthorised"})
+            }
         }
-        else{
-            return res.status(400).send({"error":"not authenticated"})
-        }
+        const user = await User.findOne({ where: {id:paitent.UserId}})
+        console.log(user)
+        updates.forEach((update)=>{
+            if(allowupdates_user.includes(update)){
+                user[update] = req.body[update]
+            }
+            if((allowupdates_paitent).includes(update)){
+                paitent[update] = req.body[update]
+            }
+        })
+        await paitent.save()
+        await user.save()
+        res.send({
+            firstName:user.firstName,
+            lastName:user.lastName,
+            email:user.email,
+            dateOfBirth:paitent.dateOfBirth,
+            gender:paitent.gender,
+            contactNumber:paitent.contactNumber,
+            address:paitent.address
+        })
     }
     catch(e){
         res.status(500).send({error:e})
     }
 })
 
+app.patch('/doctor/:id',auth,async (req,res)=>{
+    const updates = Object.keys(req.body)
+    const allowupdates_user = ['firstName','email','lastName']
+    // const allowupdates_paitent = ['dateOfBirth','gender','contactNumber','address']
+    const allowupdates_doctor = ['specialization','contactNumber']
+    const isvalid = await allowupdates_user.concat(allowupdates_doctor).every((update)=>{
+        return allowupdates_user.concat(allowupdates_doctor).includes(update)
+    })
+    if(!isvalid){
+        return res.status(400).send({"error":"invalid update"})
+    }
+    try {
+        if(!req.user){
+            return res.status(400).send()
+        }
+        const doctor = await Doctor.findOne({ where: { id: req.params.id }});
+        
+        const user = await User.findOne({ where: {id:paitent.UserId}})
+        console.log(user)
+        updates.forEach((update)=>{
+            if(allowupdates_user.includes(update)){
+                user[update] = req.body[update]
+            }
+            if((allowupdates_paitent).includes(update)){
+                paitent[update] = req.body[update]
+            }
+        })
+        await paitent.save()
+        await user.save()
+        res.send({
+            firstName:user.firstName,
+            lastName:user.lastName,
+            email:user.email,
+            dateOfBirth:paitent.dateOfBirth,
+            gender:paitent.gender,
+            contactNumber:paitent.contactNumber,
+            address:paitent.address
+        })
+    }
+    catch(e){
+        res.status(500).send({error:e})
+    }
+})
 
 // app.post('/users',async (req, res) => {
 //     const user = new User(req.body)
