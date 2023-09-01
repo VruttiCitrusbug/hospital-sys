@@ -16,6 +16,8 @@ const Doctor = sequelize.define('Doctor', {
     type: DataTypes.STRING,
     allowNull: true,
   },
+},{
+  timestamps: false,
 });
 
 Doctor.belongsTo(User);

@@ -1,6 +1,6 @@
   const express = require('express');
   const sequelize = require('./config/sequelize');
-  const User = require('./models/User');
+  const User = require('./models/user');
   const Patient = require('./models/Patient');
   const Doctor = require('./models/Doctor');
   const MedicalRecord = require('./models/MedicalRecord');
