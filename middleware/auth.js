@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const Paitent = require('../models/Patient')
+const Patient = require('../models/Patient')
 const Doctor = require('../models/Doctor')
+const MedicalRecord = require('../models/medicalrecord')
 
 const auth = async (req,res,next) => {
     try{
@@ -11,9 +12,8 @@ const auth = async (req,res,next) => {
         if(!user){
             throw new Error('err')
         }
-        req.token = token
         req.user = user
-        const paitent = await Paitent.findOne({ where: {UserId:req.user.id}});
+        const paitent = await Patient.findOne({ where: {UserId:req.user.id}});
         if(!paitent){
             req.paitent = null
         }
@@ -27,6 +27,7 @@ const auth = async (req,res,next) => {
         else{
             req.doctor = doctor
         }
+
         console.log(req.user,"UUUUUUUUUUUUUUUUUUU")
         console.log(req.doctor,"DDDDDDDDDDDDDDDDDD")
         console.log(req.paitent,"PPPPPPPPPPPPPPPPPPP")

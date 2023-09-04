@@ -2,3 +2,14 @@ npx sequelize init
 npx sequelize-cli migration:generate --name add-fields
 npx sequelize-cli db:migrate
 npx sequelize-cli db:migrate:undo:all
+
+
+
+staff1={
+    "email": "ravi.citrusbug@gmail.com",
+    "username":"ravi123",
+    "password":"ravi123",
+    "firstName":"ravi",
+    "lastName":"patel",
+    "role":"staff"
+}

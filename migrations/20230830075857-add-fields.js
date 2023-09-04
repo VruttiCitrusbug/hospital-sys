@@ -56,6 +56,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      role:{
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       token:{
         type: Sequelize.STRING,
         allowNull: true,
@@ -93,10 +97,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-      },
-      token:{
-        type: Sequelize.STRING,
-        allowNull: true,
       }
     });
 
@@ -123,10 +123,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-      },
-      token:{
-        type: Sequelize.STRING,
-        allowNull: true,
       }
     });
 

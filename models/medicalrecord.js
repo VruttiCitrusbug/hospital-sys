@@ -1,5 +1,3 @@
-// models/MedicalRecord.js
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize'); 
 const Patient = require('./Patient');
@@ -14,9 +12,10 @@ const MedicalRecord = sequelize.define('MedicalRecord', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+},{
+  timestamps: false,
 });
 
-// Establish the foreign key relationships with the Patient and Doctor models
 MedicalRecord.belongsTo(Patient);
 MedicalRecord.belongsTo(Doctor);
 
