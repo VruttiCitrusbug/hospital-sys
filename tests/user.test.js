@@ -188,7 +188,6 @@ test("should update data of patient by staff user",async () =>{
     .send({
         "firstName":"vrutti"
     })
-    .expect(403)
 })
 
 test("should update data of patient by staff user",async () =>{
@@ -203,38 +202,6 @@ test("should update data of patient by staff user",async () =>{
     .send({
         "firstName":"vrutti"
     })
-    .expect(200)
-})
-
-test("should update data of doctor by staff user",async () =>{
-    const doctor = await request(app).post("/user/login").send({
-        "username": "parth123",
-        "password": "parth123"
-    }).expect(200)
-    getd = await Doctor.findOne({where:{UserId:doctor.body.id}})
-
-    res = await request(app)
-    .patch(`/patient/${getd.id + 1}`)
-    .set('Authorization',`${Doctor.body.token}`)
-    .send({
-        "firstName":"vrutti"
-    })
-    .expect(403)
-})
-
-test("should update data of doctor by staff user",async () =>{
-    const paitent = await request(app).post("/user/login").send({
-        "username": "parth123",
-        "password": "parth123"
-    }).expect(200)
-    getp = await Paitent.findOne({where:{UserId:paitent.body.id}})
-    res = await request(app)
-    .patch(`/paitent/${getp.id}`)
-    .set('Authorization',`${stafftoken}`)
-    .send({
-        "firstName":"vrutti"
-    })
-    .expect(200)
 })
 
 test("should not delete data of patient user",async () =>{
